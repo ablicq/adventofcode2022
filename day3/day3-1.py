@@ -1,5 +1,5 @@
 def priority(char):
-    if ord(char) < 90:
+    if ord(char) <= 90:
         return ord(char) - 38
     else:
         return ord(char) - 96
