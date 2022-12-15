@@ -60,12 +60,16 @@ def compute_sizes(node: TreeNode):
     node.size += total_size
 
 
-def compute_total_size(node: TreeNode, total_size):
+def find_to_delete(node: TreeNode, limit: int, smallest: int):
+    if node.is_dir and limit <= node.size <= smallest:
+        smallest = node.size
+
     for child in node.children.values():
-        total_size = compute_total_size(child, total_size)
-    if node.is_dir and node.size <= 100000:
-        total_size += node.size
-    return total_size
+        child_smallest = find_to_delete(child, limit, smallest)
+        if child_smallest < smallest:
+            smallest = child_smallest
+
+    return smallest
 
 
 working_dir = root
@@ -74,4 +78,7 @@ with open("day7/input.txt", "r") as file:
         working_dir = handle_line(working_dir, line)
 
 compute_sizes(root)
-print(compute_total_size(root, 0))
+
+limit = 30000000 - (70000000 - root.size)
+
+print(find_to_delete(root, limit, root.size))
